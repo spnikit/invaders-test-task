@@ -25,26 +25,25 @@ export const CURRENCIES_LIST: Currency[] = [
 ]
 
 
-
 export interface Store {
   currencies: {
-    currency1: Currency | null;
-    currency2: Currency | null;
+    baseCurrency: Currency | null;
+    targetCurrency: Currency | null;
   },
   sums: {
-    sum1: number;
-    sum2: number;
+    baseSum: number;
+    targetSum: number;
   }
+
+  rates?: Rates;
+
   exchangeRate: number;
 }
 
-/*
-*
-* currency1
-* currency2
-*
-* sum1
-* sum2
-*
-* exchangeRate
-* */
+export type Rates = { [key in CURRENCIES]: string }
+
+export interface CurrencyApiResponse {
+  "date": string,
+  "base": CURRENCIES,
+  "rates": Rates
+}

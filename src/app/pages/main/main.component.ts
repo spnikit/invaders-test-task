@@ -1,4 +1,4 @@
-import {Component, DestroyRef, effect} from '@angular/core';
+import {Component, DestroyRef} from '@angular/core';
 import {MatInputModule} from "@angular/material/input";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -20,10 +20,10 @@ export class MainComponent {
   currencies = CURRENCIES_LIST
 
   form = this._fb.group({
-    currency1: [this._storeService.store().currencies.currency1],
-    currency2: [this._storeService.store().currencies.currency2],
-    sum1: new FormControl(this._storeService.store().sums.sum1, {nonNullable: true}),
-    sum2: new FormControl(this._storeService.store().sums.sum2, {nonNullable: true}),
+    baseCurrency: [this._storeService.store().currencies.baseCurrency],
+    targetCurrency: [this._storeService.store().currencies.targetCurrency],
+    baseSum: new FormControl(this._storeService.store().sums.baseSum, {nonNullable: true}),
+    targetSum: new FormControl(this._storeService.store().sums.targetSum, {nonNullable: true}),
   })
 
   constructor(
@@ -31,19 +31,37 @@ export class MainComponent {
     private _storeService: CurrencyExchangeStoreService,
     private destroyRef: DestroyRef
   ) {
-    this.form.controls.sum1.valueChanges.pipe(
+    this.form.controls.baseSum.valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe((sum1) => {
-      this._storeService.setSum1(+sum1)
-      this.form.controls.sum2.setValue(this._storeService.store().sums.sum2, {emitEvent: false})
+      this._storeService.setBaseSum(+sum1)
+      this.form.controls.targetSum.setValue(this._storeService.store().sums.targetSum, {emitEvent: false})
     })
 
-    this.form.controls.sum2.valueChanges.pipe(
+    this.form.controls.targetSum.valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe((sum2) => {
-      this._storeService.setSum2(+sum2)
-      this.form.controls.sum1.setValue(this._storeService.store().sums.sum1, {emitEvent: false})
+      this._storeService.setTargetSum(+sum2)
+      this.form.controls.baseSum.setValue(this._storeService.store().sums.baseSum, {emitEvent: false})
     })
+
+    this.form.controls.baseCurrency.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(baseCurrency => {
+      if (baseCurrency) {
+        this._storeService.setBaseCurrency(baseCurrency)
+      }
+    })
+
+    this.form.controls.targetCurrency.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(targetCurrency => {
+      if (targetCurrency) {
+        this._storeService.setTargetCurrency(targetCurrency)
+        this.form.controls.targetSum.setValue(this._storeService.store().sums.targetSum, {emitEvent: false})
+      }
+    })
+
   }
 }
 

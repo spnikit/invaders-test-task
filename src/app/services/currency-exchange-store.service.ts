@@ -1,5 +1,7 @@
 import {Injectable, signal} from '@angular/core';
-import {Currency, Store} from "../models/currencies.model";
+import {CURRENCIES, Currency, Store} from "../models/currencies.model";
+import {CurrencyApiService} from "./currency-api.service";
+import {firstValueFrom} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -7,64 +9,105 @@ import {Currency, Store} from "../models/currencies.model";
 export class CurrencyExchangeStoreService {
   private _store = signal<Store>({
     currencies: {
-      currency1: null,
-      currency2: null
+      baseCurrency: null,
+      targetCurrency: null
     },
     sums: {
-      sum1: 0,
-      sum2: 0
+      baseSum: 0,
+      targetSum: 0
     },
-    exchangeRate: 2
+    exchangeRate: 1
   })
 
   store = this._store.asReadonly()
 
 
-  constructor() {
+  constructor(private _apiService: CurrencyApiService) {
   }
 
 
-  setCurrency1(currency1: Currency) {
+  async getRates(baseCurrency: CURRENCIES) {
+    const ratesResponse = await firstValueFrom(this._apiService.getRates(baseCurrency))
+    this._store.update(store => {
+      if (store.currencies.targetCurrency) {
+        return {
+          ...store,
+          rates: ratesResponse.rates,
+          exchangeRate: +ratesResponse.rates[store.currencies.targetCurrency.val]
+        }
+
+      }
+      return {
+        ...store,
+        rates: ratesResponse.rates,
+      }
+
+    })
+  }
+
+
+  setTargetRate(targetCurrency: CURRENCIES) {
+
+    this._store.update(store => {
+
+      if (store.rates) {
+        return {
+          ...store,
+          exchangeRate: +store.rates[targetCurrency],
+          sums: {
+            ...store.sums,
+            targetSum: store.sums.baseSum *  +store.rates[targetCurrency]
+          }
+        }
+      }
+      return store
+
+    })
+  }
+
+  setBaseCurrency(baseCurrency: Currency) {
     this._store.update(store => ({
       ...store,
       currencies: {
         ...store.currencies,
-        currency1
+        baseCurrency
       }
     }))
+    this.getRates(baseCurrency.val);
   }
 
-  setCurrency2(currency2: Currency) {
+  setTargetCurrency(targetCurrency: Currency) {
+
     this._store.update(store => ({
       ...store,
       currencies: {
         ...store.currencies,
-        currency2
+        targetCurrency
       }
     }))
+
+    this.setTargetRate(targetCurrency.val)
   }
 
-  setSum1(sum1: number) {
+  setBaseSum(baseSum: number) {
     this._store.update(store => ({
       ...store,
       sums: {
-        sum1,
-        sum2: sum1 * store.exchangeRate
+        baseSum,
+        targetSum: baseSum * store.exchangeRate
       }
     }))
+
   }
 
-  setSum2(sum2: number) {
+  setTargetSum(targetSum: number) {
     this._store.update(store => ({
       ...store,
       sums: {
-        sum2,
-        sum1: sum2 / store.exchangeRate
+        targetSum,
+        baseSum: targetSum / store.exchangeRate
       }
     }))
-  }
-
-  setExchangeRate(exchangeRate: number) {
 
   }
 }

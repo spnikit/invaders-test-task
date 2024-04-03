@@ -2,14 +2,14 @@
   <div>
     <mat-form-field class="example-full-width">
       <mat-label>Сумма</mat-label>
-      <input formControlName="sum1" matInput>
+      <input formControlName="baseSum" matInput>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Валюта</mat-label>
-      <mat-select formControlName="currency1">
+      <mat-select formControlName="baseCurrency">
         @for (currency of currencies; track currency.val) {
-          <mat-option [value]="currency.val">
+          <mat-option [value]="currency">
             <mat-icon aria-hidden="false" aria-label="Example home icon" [fontIcon]="currency.icon">
             </mat-icon>
             {{ currency.val }}
@@ -22,14 +22,14 @@
   <div>
     <mat-form-field class="example-full-width">
       <mat-label>Сумма</mat-label>
-      <input formControlName="sum2" matInput>
+      <input formControlName="targetSum" matInput>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Валюта</mat-label>
-      <mat-select formControlName="currency2">
+      <mat-select formControlName="targetCurrency">
         @for (currency of currencies; track currency.val) {
-          <mat-option [value]="currency.val">
+          <mat-option [value]="currency">
             <mat-icon aria-hidden="false" aria-label="Example home icon" [fontIcon]="currency.icon">
             </mat-icon>
             {{ currency.val }}
