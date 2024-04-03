@@ -12,10 +12,39 @@ export enum CURRENCY_ICONS {
   RUB = 'currency_ruble'
 }
 
+export interface Currency {
+  val: CURRENCIES;
+  icon: CURRENCY_ICONS;
+}
 
-export const CURRENCIES_LIST: { val: CURRENCIES, icon: CURRENCY_ICONS }[] = [
+export const CURRENCIES_LIST: Currency[] = [
   {val: CURRENCIES.EUR, icon: CURRENCY_ICONS.EUR},
   {val: CURRENCIES.USD, icon: CURRENCY_ICONS.USD},
   {val: CURRENCIES.RUB, icon: CURRENCY_ICONS.RUB},
   {val: CURRENCIES.GBP, icon: CURRENCY_ICONS.GBP},
 ]
+
+
+
+export interface Store {
+  currencies: {
+    currency1: Currency;
+    currency2: Currency;
+  },
+  sums: {
+    sum1: number;
+    sum2: number;
+  }
+  exchangeRate: number;
+}
+
+/*
+*
+* currency1
+* currency2
+*
+* sum1
+* sum2
+*
+* exchangeRate
+* */
