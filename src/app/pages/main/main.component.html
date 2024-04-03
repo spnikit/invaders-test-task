@@ -1,0 +1,39 @@
+<div>
+  <mat-form-field class="example-full-width">
+    <mat-label>Сумма</mat-label>
+    <input matInput>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Валюта</mat-label>
+    <mat-select [formControl]="selectControl">
+      @for (currency of currencies; track currency.val) {
+        <mat-option [value]="currency.val">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" [fontIcon]="currency.icon">
+          </mat-icon>
+          {{ currency.val }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div>
+  <mat-form-field class="example-full-width">
+    <mat-label>Сумма</mat-label>
+    <input matInput>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Валюта</mat-label>
+    <mat-select [formControl]="selectControl">
+      @for (currency of currencies; track currency.val) {
+        <mat-option [value]="currency.val">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" [fontIcon]="currency.icon">
+          </mat-icon>
+          {{ currency.val }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
