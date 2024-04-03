@@ -1,5 +1,5 @@
 import {Injectable, signal} from '@angular/core';
-import {CURRENCIES, Currency, Store} from "../models/currencies.model";
+import {CURRENCIES, CURRENCIES_LIST, Currency, Store} from "../models/currencies.model";
 import {CurrencyApiService} from "./currency-api.service";
 import {firstValueFrom} from "rxjs";
 
@@ -9,8 +9,8 @@ import {firstValueFrom} from "rxjs";
 export class CurrencyExchangeStoreService {
   private _store = signal<Store>({
     currencies: {
-      baseCurrency: null,
-      targetCurrency: null
+      baseCurrency: CURRENCIES_LIST[1],
+      targetCurrency: CURRENCIES_LIST[2]
     },
     sums: {
       baseSum: 0,

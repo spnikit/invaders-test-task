@@ -27,8 +27,8 @@ export const CURRENCIES_LIST: Currency[] = [
 
 export interface Store {
   currencies: {
-    baseCurrency: Currency | null;
-    targetCurrency: Currency | null;
+    baseCurrency: Currency;
+    targetCurrency: Currency;
   },
   sums: {
     baseSum: number;
