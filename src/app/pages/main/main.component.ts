@@ -4,7 +4,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
 import {MatIconModule} from "@angular/material/icon";
-import {CURRENCIES_LIST} from "../../models/currencies.model";
+import {CURRENCIES, CURRENCIES_LIST} from "../../models/currencies.model";
 import {CurrencyExchangeStore} from "../../store/currency-exchange.store";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {debounceTime} from "rxjs";
@@ -32,6 +32,9 @@ export class MainComponent {
   targetSumSignal = toSignal(this.form.controls.targetSum.valueChanges.pipe(debounceTime(100)))
   baseCurrency = toSignal(this.form.controls.baseCurrency.valueChanges)
   targetCurrency = toSignal(this.form.controls.targetCurrency.valueChanges)
+
+  protected readonly CURRENCIES = CURRENCIES;
+
 
   constructor(
     private _fb: FormBuilder,
@@ -62,6 +65,7 @@ export class MainComponent {
 
 
   }
+
 }
 
 

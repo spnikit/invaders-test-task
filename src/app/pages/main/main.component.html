@@ -10,7 +10,7 @@
       <mat-label>Валюта</mat-label>
       <mat-select formControlName="baseCurrency">
         @for (currency of currencies; track currency.val) {
-          <mat-option [value]="currency">
+          <mat-option [value]="currency" [disabled]="currency.val !== CURRENCIES.USD">
             <mat-icon aria-hidden="false" aria-label="Example home icon" [fontIcon]="currency.icon">
             </mat-icon>
             {{ currency.val }}
