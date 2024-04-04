@@ -1,8 +1,9 @@
 <form class="form" [formGroup]="form">
+  <!--todo: refactor to custom control component with defaultValueAccessor-->
   <div>
     <mat-form-field class="example-full-width">
       <mat-label>Сумма</mat-label>
-      <input formControlName="baseSum" matInput>
+      <input type="number" formControlName="baseSum" matInput>
     </mat-form-field>
 
     <mat-form-field>
@@ -22,7 +23,7 @@
   <div>
     <mat-form-field class="example-full-width">
       <mat-label>Сумма</mat-label>
-      <input formControlName="targetSum" matInput>
+      <input type="number" formControlName="targetSum" matInput>
     </mat-form-field>
 
     <mat-form-field>

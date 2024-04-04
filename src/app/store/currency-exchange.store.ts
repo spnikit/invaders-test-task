@@ -2,7 +2,8 @@ import {CURRENCIES_LIST, Currency, Rates} from "../models/currencies.model";
 import {patchState, signalStore, withComputed, withMethods, withState} from "@ngrx/signals";
 import {computed, inject} from "@angular/core";
 import {CurrencyApiService} from "../services/currency-api.service";
-import {firstValueFrom} from "rxjs";
+import {debounceTime, firstValueFrom, pipe, tap} from "rxjs";
+import {rxMethod} from "@ngrx/signals/rxjs-interop";
 
 interface State {
   currencies: {
@@ -13,9 +14,7 @@ interface State {
     baseSum: number;
     targetSum: number;
   }
-
   rates: Rates;
-
   exchangeRate: number;
 }
 
@@ -51,6 +50,21 @@ export const CurrencyExchangeStore = signalStore(
         }
       }))
     },
+
+    setBaseSumRx: rxMethod<number>(
+      pipe(
+        debounceTime(100),
+        tap(baseSum => {
+          patchState(store, (state) => ({
+            sums: {
+              ...state.sums,
+              baseSum
+            }
+          }))
+
+        })
+      )
+    ),
     setTargetSum(targetSum: number) {
       patchState(store, (state) => ({
         sums: {
@@ -58,8 +72,21 @@ export const CurrencyExchangeStore = signalStore(
           targetSum
         }
       }))
-
     },
+    setTargetSumRx: rxMethod<number>(
+      pipe(
+        debounceTime(100),
+        tap(targetSum => {
+          patchState(store, (state) => ({
+            sums: {
+              ...state.sums,
+              targetSum,
+            }
+          }))
+
+        })
+      )
+    ),
     async getRates(baseCurrency: Currency = CURRENCIES_LIST[1]) {
       const ratesResponse = await firstValueFrom(apiService.getRates(baseCurrency.val))
       patchState(store, (state) => ({
@@ -70,9 +97,12 @@ export const CurrencyExchangeStore = signalStore(
 
     setTargetCurrency(targetCurrency: Currency) {
       patchState(store, (state) => ({
+        sums: {
+          ...state.sums,
+        },
         currencies: {
           ...state.currencies,
-          targetCurrency
+          targetCurrency,
         },
         exchangeRate: +state.rates[targetCurrency.val]
       }))

@@ -1,4 +1,4 @@
-import {Component, DestroyRef, effect, inject} from '@angular/core';
+import {Component, effect, inject} from '@angular/core';
 import {MatInputModule} from "@angular/material/input";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -7,6 +7,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {CURRENCIES_LIST} from "../../models/currencies.model";
 import {CurrencyExchangeStore} from "../../store/currency-exchange.store";
 import {toSignal} from "@angular/core/rxjs-interop";
+import {debounceTime} from "rxjs";
 
 @Component({
   selector: 'inv-main',
@@ -27,8 +28,8 @@ export class MainComponent {
     targetSum: [this.store.targetSumComputed()],
   })
 
-  baseSumSignal = toSignal(this.form.controls.baseSum.valueChanges)
-  targetSumSignal = toSignal(this.form.controls.targetSum.valueChanges)
+  baseSumSignal = toSignal(this.form.controls.baseSum.valueChanges.pipe(debounceTime(100)))
+  targetSumSignal = toSignal(this.form.controls.targetSum.valueChanges.pipe(debounceTime(100)))
   baseCurrency = toSignal(this.form.controls.baseCurrency.valueChanges)
   targetCurrency = toSignal(this.form.controls.targetCurrency.valueChanges)
 
@@ -36,26 +37,26 @@ export class MainComponent {
     private _fb: FormBuilder,
   ) {
     effect(() => {
-      const baseSum = this.baseSumSignal()
+      const baseSum = this.baseSumSignal();
       if (baseSum) {
-        this.store.setBaseSum(baseSum)
-        this.form.controls.targetSum.setValue(this.store.targetSumComputed())
+        this.store.setBaseSum(baseSum);
+        this.form.controls.targetSum.setValue(this.store.targetSumComputed(), {emitEvent: false});
       }
     }, {allowSignalWrites: true});
 
     effect(() => {
-      const targetSum = this.targetSumSignal()
+      const targetSum = this.targetSumSignal();
       if (targetSum) {
-        this.store.setTargetSum(targetSum)
-        this.form.controls.baseSum.setValue(this.store.baseSumComputed())
+        this.store.setTargetSum(targetSum);
+        this.form.controls.baseSum.setValue(this.store.baseSumComputed(), {emitEvent: false});
       }
     }, {allowSignalWrites: true});
 
     effect(() => {
-      const targetCurrency = this.targetCurrency()
+      const targetCurrency = this.targetCurrency();
       if (targetCurrency) {
-        this.store.setTargetCurrency(targetCurrency)
-        this.form.controls.targetCurrency.setValue(targetCurrency)
+        this.store.setTargetCurrency(targetCurrency);
+        // this.form.controls.targetCurrency.setValue(targetCurrency, {emitEvent: false});
       }
     }, {allowSignalWrites: true});
 
