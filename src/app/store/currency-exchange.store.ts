@@ -42,6 +42,7 @@ export const CurrencyExchangeStore = signalStore(
     targetSumComputed: computed(() => sums.baseSum() * exchangeRate())
   })),
   withMethods((store, apiService = inject(CurrencyApiService)) => ({
+
     setBaseSum(baseSum: number) {
       patchState(store, (state) => ({
         sums: {

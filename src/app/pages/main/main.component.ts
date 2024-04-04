@@ -38,7 +38,7 @@ export class MainComponent {
   ) {
     effect(() => {
       const baseSum = this.baseSumSignal();
-      if (baseSum) {
+      if (baseSum !== null && baseSum !== undefined) {
         this.store.setBaseSum(baseSum);
         this.form.controls.targetSum.setValue(this.store.targetSumComputed(), {emitEvent: false});
       }
@@ -46,7 +46,7 @@ export class MainComponent {
 
     effect(() => {
       const targetSum = this.targetSumSignal();
-      if (targetSum) {
+      if (targetSum !== null && targetSum !== undefined) {
         this.store.setTargetSum(targetSum);
         this.form.controls.baseSum.setValue(this.store.baseSumComputed(), {emitEvent: false});
       }
